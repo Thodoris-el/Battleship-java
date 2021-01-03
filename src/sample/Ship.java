@@ -42,6 +42,6 @@ public class Ship extends Parent {
     }
 
     public boolean isHited(){
-        return health == type;
+        return !(health == type);
     }
 }

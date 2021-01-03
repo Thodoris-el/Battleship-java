@@ -43,6 +43,7 @@ public class Board extends Parent {
     static int CruiserShip = 0;
     static int SubmarineShip = 0;
     static int DestroyerShip = 0;
+    ArrayList<Ship> Ships = new ArrayList<Ship>();
 
 
 
@@ -96,7 +97,7 @@ public class Board extends Parent {
                     }
                 }
             }
-
+            Ships.add(ship);
             return true;
         }
 
@@ -134,7 +135,7 @@ public class Board extends Parent {
                     }
                 }
             }
-
+            Ships.add(ship);
             return true;
         }
 
