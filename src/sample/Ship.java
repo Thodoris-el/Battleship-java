@@ -4,7 +4,7 @@ import javafx.scene.Parent;
 
 public class Ship extends Parent {
     public int type;
-    public boolean vertical = true;
+    public boolean vertical;
     public int Score;
     public int SinkBonus;
     public String shipType;
@@ -19,22 +19,10 @@ public class Ship extends Parent {
         this.SinkBonus = SinkBonus;
         this.shipType = shipType;
 
-        /*VBox vbox = new VBox();
-        for (int i = 0; i < type; i++) {
-            Rectangle square = new Rectangle(30, 30);
-            square.setFill(null);
-            square.setStroke(Color.BLACK);
-            vbox.getChildren().add(square);
-        }
-        getChildren().add(vbox);*/
     }
 
     public void hit() {
         health--;
-    }
-
-    public int getHealth() {
-        return health;
     }
 
     public boolean isAlive() {

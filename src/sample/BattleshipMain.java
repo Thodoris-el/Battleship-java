@@ -1,6 +1,5 @@
 package sample;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +43,8 @@ public class BattleshipMain extends Application {
     private String ScenarioID;
     ArrayList<Cell> PlayerHistory = new ArrayList<>(5);
     ArrayList<Cell> EnemyHistory = new ArrayList<>(5);
+    static boolean FlagStart = false;
+    public Label SScore = new Label();
 
     private boolean enemyTurn = false;
 
@@ -83,7 +84,8 @@ public class BattleshipMain extends Application {
             }
         }
     }
-    private Parent createContent() throws FileNotFoundException {
+
+    private Parent createContent(boolean flag) throws FileNotFoundException {
         ScenarioID = "default";
         ships[0] = 5;
         ships[1] = 4;
@@ -110,12 +112,9 @@ public class BattleshipMain extends Application {
         Names[4] = "Destroyer";
 
 
-        enemyTurn = WhoStarts();
-
-
         BorderPane root = new BorderPane();
-        root.setPrefSize(1000, 800);
-        Label SScore = new Label();
+        root.setPrefSize(1200, 800);
+
         SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
         SScore.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         SScore.setTextFill(Color.DARKRED);
@@ -140,16 +139,29 @@ public class BattleshipMain extends Application {
         Button ShootButton = new Button("Shoot");
 
         HBox ShootContent = new HBox(tmp1,tmp2,new VBox(new Text(""),ShootButton));
-        ShootContent.setAlignment(Pos.CENTER);
+        ShootContent.setAlignment(Pos.BASELINE_CENTER);
         root.setBottom(ShootContent);
         EventHandler<ActionEvent> ButonEvent = e -> {
             String corX = PositionX.getText();
             String corY = PositionY.getText();
             try {
+                if(PlayernummerOfMoves>0){
                 playermove(corX,corY);
+                }
+
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
+            try {
+                if(EnemynummerOfMoves>0) {
+                    enemyMove();
+                }
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+            SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
+            root.setTop(SScore);
+            End();
         };
         ShootButton.setOnAction(ButonEvent);
 
@@ -157,6 +169,7 @@ public class BattleshipMain extends Application {
         Menu Application = new Menu("Application");
         MenuItem Start = new MenuItem("Start");
         Start.setOnAction(eStart -> {
+            FlagStart = true;
             cleanup();
             try {
                 restart();
@@ -308,118 +321,15 @@ public class BattleshipMain extends Application {
         ShipIcons.setAlignment(Pos.CENTER);
         root.setRight(ShipIcons);
 
+        enemyBoard = new Board(true);
 
 
+        playerBoard = new Board(false);
 
-        enemyBoard = new Board(true, event -> {
-            if (!running)
-                return;
-
-            if(shipsToPlace == -1 ){
-                shipsToPlace = -2;
-                Alert alert;
-                if(enemyTurn){
-                    alert = new Alert(Alert.AlertType.WARNING, "Enemy starts first!!!\n Click anywhere in the enemy board to start the game!!!");
-                }
-                else{
-                    alert = new Alert(Alert.AlertType.WARNING, "You start!!!\n Choose where to shoot!!!");
-                }
-                alert.setHeaderText(null);
-                alert.showAndWait();
-
-            }
-
-            Cell cell = (Cell) event.getSource();
-            if (cell.wasShot)
-                return;
-
-            if(PlayernummerOfMoves == 0 && EnemynummerOfMoves == 0){
-                ButtonType retry = new ButtonType("Retry",ButtonBar.ButtonData.OK_DONE);
-                ButtonType quit = new ButtonType("Quit",ButtonBar.ButtonData.CANCEL_CLOSE);
-                Alert kk = new Alert(Alert.AlertType.WARNING,"You Win!!!",retry,quit);
-                if (Score > EnemyScore){
-                    kk.setContentText("You Win!!!\n Score: "+ Score + "- "+EnemyScore);
-                }else if (Score < EnemyScore){
-                    kk.setContentText("You Lose!!!\n Score: "+ Score + "- "+EnemyScore);
-                }else{
-                    kk.setContentText("It's a tie!!!\n Score: "+ Score + "- "+EnemyScore);
-                }
-                kk.setHeaderText(null);
-                Optional<ButtonType> result = kk.showAndWait();
-                if (result.get() == quit){
-                    System.exit(0);
-                }else{
-                    try {
-                        restart();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if (!enemyTurn && PlayernummerOfMoves != 0) {
-                try {
-                    /*enemyTurn = !cell.shoot(true);
-                    if(PlayerHistory.size() == 5){
-                        PlayerHistory.remove(0);
-                    }
-                    PlayerHistory.add(cell);
-                    enemyTurn = true;*/
-                    PlayernummerOfMoves--;
-                    SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
-                    root.setTop(SScore);
-                    //if (!cell.ship.isAlive()){
-                    //}
-                } catch (Exception ignored) {
-                }
-            }
-
-            if (enemyBoard.ships == 0) {
-                ButtonType retry = new ButtonType("Retry",ButtonBar.ButtonData.OK_DONE);
-                ButtonType quit = new ButtonType("Quit",ButtonBar.ButtonData.CANCEL_CLOSE);
-                Alert kk = new Alert(Alert.AlertType.WARNING,"You Win!!!",retry,quit);
-                kk.setContentText("You Win!!!");
-                kk.setHeaderText(null);
-                Optional<ButtonType> result = kk.showAndWait();
-                if (result.get() == quit){
-                    System.exit(0);
-                }else{
-                    try {
-                        restart();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                System.out.println("YOU WIN");
-            }
-
-            if (enemyTurn)
-                try {
-                    enemyMove();
-                    SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
-                    root.setTop(SScore);
-                }catch (Exception ignored){}
-        });
-
-        playerBoard = new Board(false, event -> {
-            if (running)
-                return;
-
+        if(flag){
             StartPlayer();
+        }
 
-            /*Cell cell = (Cell) event.getSource();
-            try {
-                if (shipsToPlace < 0 && playerBoard.placeShip(new Ship(ships[shipsToPlace], event.getButton() == MouseButton.PRIMARY,scores[shipsToPlace],sinks[shipsToPlace],Names[shipsToPlace]), cell.x, cell.y)) {
-                    shipsToPlace--;
-                    if (shipsToPlace < 0) {
-                        startGame();
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
-        });
 
         Label enemyLabel = new Label("Enemy Board");
         enemyLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
@@ -557,6 +467,16 @@ public class BattleshipMain extends Application {
     void cleanup() {
         // stop animations reset model ect.
         this.primaryStage.close();
+        Board.DestroyerShip -= 1;
+        Board.SubmarineShip -= 1;
+        Board.CruiserShip = -1;
+        Board.BattleshipShip -= 1;
+        Board.CarrierShip = -1;
+        Board.EnemyDestroyerShip -= 1;
+        Board.EnemySubmarineShip -= 1;
+        Board.EnemyCruiserShip = -1;
+        Board.EnemyBattleshipShip -= 1;
+        Board.EnemyCarrierShip = -1;
 
     }
 
@@ -570,7 +490,7 @@ public class BattleshipMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        Parent root = createContent();
+        Parent root = createContent(FlagStart);
         root.setId("pane");
         Scene scene = new Scene(root);
         primaryStage.setTitle("MediaLab Battleship");
@@ -578,18 +498,32 @@ public class BattleshipMain extends Application {
         this.primaryStage.setScene(scene);
         this.primaryStage.setResizable(false);
         this.primaryStage.show();
+        enemyTurn = WhoStarts();
+        if(shipsToPlace == -1 ){
+            shipsToPlace = -2;
+            Alert alert;
+            if(enemyTurn){
+                alert = new Alert(Alert.AlertType.WARNING, "Enemy starts first!!!\n Click anywhere in the enemy board to start the game!!!");
+            }
+            else{
+                alert = new Alert(Alert.AlertType.WARNING, "You start!!!\n Choose where to shoot!!!");
+            }
+            alert.setHeaderText(null);
+            alert.showAndWait();
+
+        }
+
+        if (enemyTurn && FlagStart) {
+            try {
+                enemyMove();
+            } catch (Exception ignored) {
+            }
+        }
     }
-
-
-
 
     public static void main(String[] args) {
         launch(args);
     }
-
-    /*private boolean isValidPoint(double x, double y) {
-        return x >= 0 && x < 10 && y >= 0 && y < 10;
-    }*/
 
     private void AI(double x, double y,boolean flag){
         NextMove.clear();
@@ -636,8 +570,8 @@ public class BattleshipMain extends Application {
         }else {
             int Corx = Integer.parseInt(x);
             int Cory = Integer.parseInt(y);
-            if (Corx >= 1 && Corx <= 10 && Cory > 1 && Cory <= 10) {
-                Cell cell = enemyBoard.getCell(Corx - 1, Cory - 1);
+            if (Corx >= 0 && Corx <= 9 && Cory >= 0 && Cory <= 9) {
+                Cell cell = enemyBoard.getCell(Corx, Cory);
                 if (cell.wasShot) {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "You have already shoot this cell \n Please shoot another one");
                     alert.showAndWait();
@@ -654,6 +588,52 @@ public class BattleshipMain extends Application {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Invalid coordinates!!! \n Please try again");
                 alert.showAndWait();
             }
+        }
+    }
+
+    public void End() {
+        if (PlayernummerOfMoves == 0 && EnemynummerOfMoves == 0) {
+            ButtonType retry = new ButtonType("Retry", ButtonBar.ButtonData.OK_DONE);
+            ButtonType quit = new ButtonType("Quit", ButtonBar.ButtonData.CANCEL_CLOSE);
+            Alert kk = new Alert(Alert.AlertType.WARNING, "You Win!!!", retry, quit);
+            if (Score > EnemyScore) {
+                kk.setContentText("You Win!!!\n Score: " + Score + "- " + EnemyScore);
+            } else if (Score < EnemyScore) {
+                kk.setContentText("You Lose!!!\n Score: " + Score + "- " + EnemyScore);
+            } else {
+                kk.setContentText("It's a tie!!!\n Score: " + Score + "- " + EnemyScore);
+            }
+            kk.setHeaderText(null);
+            Optional<ButtonType> result = kk.showAndWait();
+            if (result.get() == quit) {
+                System.exit(0);
+            } else {
+                try {
+                    restart();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (enemyBoard.ships == 0) {
+            ButtonType retry = new ButtonType("Retry", ButtonBar.ButtonData.OK_DONE);
+            ButtonType quit = new ButtonType("Quit", ButtonBar.ButtonData.CANCEL_CLOSE);
+            Alert kk = new Alert(Alert.AlertType.WARNING, "You Win!!!", retry, quit);
+            kk.setContentText("You Win!!!");
+            kk.setHeaderText(null);
+            Optional<ButtonType> result = kk.showAndWait();
+            if (result.get() == quit) {
+                System.exit(0);
+            } else {
+                try {
+                    restart();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("YOU WIN");
         }
     }
 }

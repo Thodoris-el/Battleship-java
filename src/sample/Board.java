@@ -1,37 +1,24 @@
 package sample;
 //libraries needed
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.scene.control.OverrunStyle;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.image.Image;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import sample.Exceptions.AdjacentTilesException;
 import sample.Exceptions.InvalidCountExeception;
 import sample.Exceptions.OverlapTilesException;
 import sample.Exceptions.OversizeException;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board extends Parent {
 
@@ -48,11 +35,11 @@ public class Board extends Parent {
     static int EnemyCruiserShip = 0;
     static int EnemySubmarineShip = 0;
     static int EnemyDestroyerShip = 0;
-    ArrayList<Ship> Ships = new ArrayList<Ship>();
+    ArrayList<Ship> Ships = new ArrayList<>();
 
 
 
-    public Board(boolean enemy, EventHandler<? super MouseEvent> handler) {
+    public Board(boolean enemy) {
 
 
         this.enemy = enemy;
@@ -60,7 +47,7 @@ public class Board extends Parent {
             HBox row = new HBox();
             for (int x = 0; x < 10; x++) {
                 Cell c = new Cell(x, y, this);
-                c.setOnMouseClicked(handler);
+
                 row.getChildren().add(c);
             }
 
@@ -178,7 +165,6 @@ public class Board extends Parent {
 
         return false;
     }
-
 
     public Cell getCell(int x, int y) {
         return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
@@ -383,95 +369,6 @@ public class Board extends Parent {
         }
         return true;
     }
-
-    /*private boolean canPlaceEnemyShip(Ship ship, int x, int y) {
-        int length = ship.type;
-
-        if (ship.vertical) {
-            for (int i = y; i < y + length; i++) {
-                try {
-                    isValidPoint(x, i);
-                    Cell cell = getCell(x, i);
-                    try {
-                        iSCellEmpty(cell);
-                    } catch (OverlapTilesException e) {*/
-                        /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage() + x + i);
-                        alert.showAndWait();*/
-                       /* return false;
-                    }
-
-                    for (Cell neighbor : getNeighbors(x, i)) {
-                        try {
-                            isValidPoint(x, i);
-                            try {
-                                isNeighborEmpty(neighbor);
-                            } catch (AdjacentTilesException e) {*/
-                                /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                                alert.showAndWait();*/
-                                /*return false;
-                            }
-                        } catch (OversizeException e) {*/
-                           /* Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();
-                            return false;*/
-                      /*  }
-                    }
-
-                } catch (OversizeException e) {*/
-                    /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                    alert.showAndWait();*/
-                    /*return false;
-                }
-            }
-        } else {
-            for (int i = x; i < x + length; i++) {
-                try {
-                    isValidPoint(i, y);
-
-                    Cell cell = getCell(i, y);
-                    try {
-                        iSCellEmpty(cell);
-                    } catch (OverlapTilesException e) {*/
-                        /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                        alert.showAndWait();*/
-                        /*return false;
-                    }
-
-                    for (Cell neighbor : getNeighbors(i, y)) {
-                        try {
-                            isValidPoint(i, y);
-                            try {
-                                isNeighborEmpty(neighbor);
-                            } catch (AdjacentTilesException e) {*/
-                                /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                                alert.showAndWait();*/
-                               /* return false;
-                            }
-                        } catch (OversizeException e) {*/
-                            /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();*/
-                           /* return false;
-                        }
-                    }
-
-                } catch (OversizeException e) {*/
-                    /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                    alert.showAndWait();*/
-                    /*return false;
-                }
-
-            }
-        }*/
-
-       /* try {
-            ShipNumber(ship);
-        } catch (InvalidCountExeception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-            alert.showAndWait();
-            return false;
-        }*/
-       /* return true;
-    }*/
 
     private boolean isValidPoint(Point2D point) throws OversizeException {
         return isValidPoint(point.getX(), point.getY());
