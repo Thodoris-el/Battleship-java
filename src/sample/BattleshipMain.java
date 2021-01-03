@@ -2,6 +2,7 @@ package sample;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,8 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -46,6 +49,8 @@ public class BattleshipMain extends Application {
     private String Names[] = new String[5];
     private File Scenario;
     private String ScenarioID;
+    ArrayList<Cell> PlayerHistory = new ArrayList<Cell>(5);
+    ArrayList<Cell> EnemyHistory = new ArrayList<Cell>(5);
 
     private boolean enemyTurn = false;
 
@@ -90,7 +95,7 @@ public class BattleshipMain extends Application {
             }
         }
     }
-    private Parent createContent() {
+    private Parent createContent() throws FileNotFoundException {
         ScenarioID = "default";
         ships[0] = 5;
         ships[1] = 4;
@@ -219,13 +224,99 @@ public class BattleshipMain extends Application {
             alert.showAndWait();
         });
         MenuItem PlayerShots = new MenuItem("Player Shots");
+        PlayerShots.setOnAction(ePlayerShots -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
+            String alertText = "";
+            for(int i =0;i<PlayerHistory.size();i++){
+                Cell tmpCell = PlayerHistory.get(i);
+                if(tmpCell.ship == null){
+                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Missed Shot\n";
+                }else{
+                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Shot hit "+tmpCell.ship.shipType+"\n";
+                }
+            }
+            alert.setContentText(alertText);
+            alert.setHeaderText("Your Shot History");
+            alert.showAndWait();
+        });
         MenuItem EnemyShots = new MenuItem("EnemyShots");
+        EnemyShots.setOnAction(eEnemyShots -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
+            String alertText = "";
+            for(int i =0;i<EnemyHistory.size();i++){
+                Cell tmpCell = EnemyHistory.get(i);
+                if(tmpCell.ship == null){
+                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Missed Shot\n";
+                }else{
+                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Shot hit "+tmpCell.ship.shipType+"\n";
+                }
+            }
+            alert.setContentText(alertText);
+            alert.setHeaderText("Enemy Shot History");
+            alert.showAndWait();
+        });
 
         Details.getItems().addAll(EnemyShips,PlayerShots,EnemyShots);
 
         MenuBar BattleshipMenu = new MenuBar();
         BattleshipMenu.getMenus().addAll(Application,Details);
         root.setRight(BattleshipMenu);
+
+        FileInputStream inputstreamShip;
+        Label Cruiser = new Label("Cruiser");
+        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+        Image imgCruiser = new Image(inputstreamShip);
+        ImageView imgCruiserView = new ImageView(imgCruiser);
+        imgCruiserView.setFitHeight(25);
+        imgCruiserView.setFitWidth(25);
+        Cruiser.setGraphic(imgCruiserView);
+        Cruiser.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        Cruiser.setTextFill(Color.DARKRED);
+
+        Label Carrier = new Label("Carrier");
+        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+        Image imgCarrier = new Image(inputstreamShip);
+        ImageView imgCarrierView = new ImageView(imgCarrier);
+        imgCarrierView.setFitHeight(25);
+        imgCarrierView.setFitWidth(25);
+        Carrier.setGraphic(imgCarrierView);
+        Carrier.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        Carrier.setTextFill(Color.DARKRED);
+
+        Label Battleship = new Label("Battleship");
+        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+        Image imgBattleship = new Image(inputstreamShip);
+        ImageView imgBattleshipView = new ImageView(imgBattleship);
+        imgBattleshipView.setFitHeight(25);
+        imgBattleshipView.setFitWidth(25);
+        Battleship.setGraphic(imgBattleshipView);
+        Battleship.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        Battleship.setTextFill(Color.DARKRED);
+
+        Label Submarine = new Label("Submarine");
+        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+        Image imgSubmarine = new Image(inputstreamShip);
+        ImageView imgSubmarineView = new ImageView(imgSubmarine);
+        imgSubmarineView.setFitHeight(25);
+        imgSubmarineView.setFitWidth(25);
+        Submarine.setGraphic(imgSubmarineView);
+        Submarine.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        Submarine.setTextFill(Color.DARKRED);
+
+        Label Destroyer = new Label("Destroyer");
+        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+        Image imgDestroyer = new Image(inputstreamShip);
+        ImageView imgDestroyerView = new ImageView(imgDestroyer);
+        imgDestroyerView.setFitHeight(25);
+        imgDestroyerView.setFitWidth(25);
+        Destroyer.setGraphic(imgDestroyerView);
+        Destroyer.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        Destroyer.setTextFill(Color.DARKRED);
+
+
+        VBox ShipIcons = new VBox(Carrier,Battleship,Cruiser,Submarine,Destroyer);
+        ShipIcons.setAlignment(Pos.CENTER);
+        root.setRight(ShipIcons);
 
 
 
@@ -280,6 +371,10 @@ public class BattleshipMain extends Application {
             if (!enemyTurn && PlayernummerOfMoves != 0) {
                 try {
                     enemyTurn = !cell.shoot(true);
+                    if(PlayerHistory.size() == 5){
+                        PlayerHistory.remove(0);
+                    }
+                    PlayerHistory.add(cell);
                     enemyTurn = true;
                     PlayernummerOfMoves--;
                     SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
@@ -374,9 +469,6 @@ public class BattleshipMain extends Application {
                 y = (int) NextMove.get(0).getY();
                 NextMove.remove(0);
             }
-
-
-
             Cell cell = playerBoard.getCell(x, y);
             if (cell.wasShot)
                 continue;
@@ -394,7 +486,10 @@ public class BattleshipMain extends Application {
                         AI(x,y,Flag);
                     }
                 }
-
+               if(EnemyHistory.size() == 5){
+                   EnemyHistory.remove(0);
+               }
+               EnemyHistory.add(cell);
                 enemyTurn = false;
                 EnemynummerOfMoves--;
 

@@ -76,6 +76,23 @@ public class Board extends Parent {
                     cell.ship = ship;
                     if (!enemy) {
                         FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
+                        if(ship.shipType=="Carrier"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+                        }
+                        else if(ship.shipType=="Battleship"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+                        }
+                        else if(ship.shipType=="Cruiser"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+                        }
+                        else if(ship.shipType=="Submarine"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+                        }
+                        else{
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+                        }
+
+
                         Image shipimg = new Image(inputstreamShip);
 
                         cell.setFill(new ImagePattern(shipimg));
@@ -89,6 +106,21 @@ public class Board extends Parent {
                     cell.ship = ship;
                     if (!enemy) {
                         FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
+                        if(ship.shipType=="Carrier"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+                        }
+                        else if(ship.shipType=="Battleship"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+                        }
+                        else if(ship.shipType=="Cruiser"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+                        }
+                        else if(ship.shipType=="Submarine"){
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+                        }
+                        else{
+                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+                        }
                         Image shipimg = new Image(inputstreamShip);
 
                         cell.setFill(new ImagePattern(shipimg));
