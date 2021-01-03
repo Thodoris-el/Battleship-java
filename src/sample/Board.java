@@ -43,6 +43,11 @@ public class Board extends Parent {
     static int CruiserShip = 0;
     static int SubmarineShip = 0;
     static int DestroyerShip = 0;
+    static int EnemyCarrierShip = 0;
+    static int EnemyBattleshipShip = 0;
+    static int EnemyCruiserShip = 0;
+    static int EnemySubmarineShip = 0;
+    static int EnemyDestroyerShip = 0;
     ArrayList<Ship> Ships = new ArrayList<Ship>();
 
 
@@ -280,13 +285,13 @@ public class Board extends Parent {
             }
         }
 
-       /* try {
+       try {
             ShipNumber(ship);
         } catch (InvalidCountExeception e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.showAndWait();
             return false;
-        }*/
+        }
         return true;
     }
 
@@ -301,8 +306,8 @@ public class Board extends Parent {
                     try {
                         iSCellEmpty(cell);
                     } catch (OverlapTilesException e) {
-                        /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage() + x + i);
-                        alert.showAndWait();*/
+                        Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage() + x + i);
+                        alert.showAndWait();
                         return false;
                     }
 
@@ -312,8 +317,8 @@ public class Board extends Parent {
                             try {
                                 isNeighborEmpty(neighbor);
                             } catch (AdjacentTilesException e) {
-                                /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                                alert.showAndWait();*/
+                                Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                                alert.showAndWait();
                                 return false;
                             }
                         } catch (OversizeException e) {
@@ -324,8 +329,8 @@ public class Board extends Parent {
                     }
 
                 } catch (OversizeException e) {
-                    /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                    alert.showAndWait();*/
+                    Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                    alert.showAndWait();
                     return false;
                 }
             }
@@ -338,8 +343,8 @@ public class Board extends Parent {
                     try {
                         iSCellEmpty(cell);
                     } catch (OverlapTilesException e) {
-                        /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                        alert.showAndWait();*/
+                        Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                        alert.showAndWait();
                         return false;
                     }
 
@@ -349,25 +354,114 @@ public class Board extends Parent {
                             try {
                                 isNeighborEmpty(neighbor);
                             } catch (AdjacentTilesException e) {
-                                /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                                alert.showAndWait();*/
+                                Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                                alert.showAndWait();
                                 return false;
                             }
                         } catch (OversizeException e) {
                             /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();*/
-                            return false;
+                            alert.showAndWait();
+                            return false;*/
                         }
                     }
 
                 } catch (OversizeException e) {
-                    /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                    alert.showAndWait();*/
+                    Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                    alert.showAndWait();
                     return false;
                 }
 
             }
         }
+
+       try {
+            EnemyShipNumber(ship);
+        } catch (InvalidCountExeception e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+
+    /*private boolean canPlaceEnemyShip(Ship ship, int x, int y) {
+        int length = ship.type;
+
+        if (ship.vertical) {
+            for (int i = y; i < y + length; i++) {
+                try {
+                    isValidPoint(x, i);
+                    Cell cell = getCell(x, i);
+                    try {
+                        iSCellEmpty(cell);
+                    } catch (OverlapTilesException e) {*/
+                        /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage() + x + i);
+                        alert.showAndWait();*/
+                       /* return false;
+                    }
+
+                    for (Cell neighbor : getNeighbors(x, i)) {
+                        try {
+                            isValidPoint(x, i);
+                            try {
+                                isNeighborEmpty(neighbor);
+                            } catch (AdjacentTilesException e) {*/
+                                /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                                alert.showAndWait();*/
+                                /*return false;
+                            }
+                        } catch (OversizeException e) {*/
+                           /* Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                            alert.showAndWait();
+                            return false;*/
+                      /*  }
+                    }
+
+                } catch (OversizeException e) {*/
+                    /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                    alert.showAndWait();*/
+                    /*return false;
+                }
+            }
+        } else {
+            for (int i = x; i < x + length; i++) {
+                try {
+                    isValidPoint(i, y);
+
+                    Cell cell = getCell(i, y);
+                    try {
+                        iSCellEmpty(cell);
+                    } catch (OverlapTilesException e) {*/
+                        /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                        alert.showAndWait();*/
+                        /*return false;
+                    }
+
+                    for (Cell neighbor : getNeighbors(i, y)) {
+                        try {
+                            isValidPoint(i, y);
+                            try {
+                                isNeighborEmpty(neighbor);
+                            } catch (AdjacentTilesException e) {*/
+                                /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                                alert.showAndWait();*/
+                               /* return false;
+                            }
+                        } catch (OversizeException e) {*/
+                            /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                            alert.showAndWait();*/
+                           /* return false;
+                        }
+                    }
+
+                } catch (OversizeException e) {*/
+                    /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                    alert.showAndWait();*/
+                    /*return false;
+                }
+
+            }
+        }*/
 
        /* try {
             ShipNumber(ship);
@@ -376,8 +470,8 @@ public class Board extends Parent {
             alert.showAndWait();
             return false;
         }*/
-        return true;
-    }
+       /* return true;
+    }*/
 
     private boolean isValidPoint(Point2D point) throws OversizeException {
         return isValidPoint(point.getX(), point.getY());
@@ -463,20 +557,45 @@ public class Board extends Parent {
             CarrierShip += 1;
             return true;
         }
-        if (ship.shipType == "Battleship" && (CarrierShip + 1) <= 1){
+        if (ship.shipType == "Battleship" && (BattleshipShip + 1) <= 1){
             BattleshipShip += 1;
             return true;
         }
-        if (ship.shipType == "Cruiser" && (CarrierShip + 1) <= 1){
+        if (ship.shipType == "Cruiser" && (CruiserShip + 1) <= 1){
             CruiserShip += 1;
             return true;
         }
-        if (ship.shipType == "Submarine" && (CarrierShip + 1) <= 1){
+        if (ship.shipType == "Submarine" && (SubmarineShip + 1) <= 1){
             SubmarineShip += 1;
             return true;
         }
-        if (ship.shipType == "Destroyer" && (CarrierShip + 1) <= 1){
+        if (ship.shipType == "Destroyer" && (DestroyerShip + 1) <= 1){
             DestroyerShip += 1;
+            return true;
+        }else{
+            throw new InvalidCountExeception("You can only place one ship of type: " + ship.shipType);
+        }
+    }
+
+    private boolean EnemyShipNumber(Ship ship) throws InvalidCountExeception {
+        if (ship.shipType == "Carrier" && (EnemyCarrierShip + 1) <= 1){
+            EnemyCarrierShip += 1;
+            return true;
+        }
+        if (ship.shipType == "Battleship" && (EnemyBattleshipShip + 1) <= 1){
+            EnemyBattleshipShip += 1;
+            return true;
+        }
+        if (ship.shipType == "Cruiser" && (EnemyCruiserShip + 1) <= 1){
+            EnemyCruiserShip += 1;
+            return true;
+        }
+        if (ship.shipType == "Submarine" && (EnemySubmarineShip + 1) <= 1){
+            EnemySubmarineShip += 1;
+            return true;
+        }
+        if (ship.shipType == "Destroyer" && (EnemyDestroyerShip + 1) <= 1){
+            EnemyDestroyerShip += 1;
             return true;
         }else{
             throw new InvalidCountExeception("You can only place one ship of type: " + ship.shipType);

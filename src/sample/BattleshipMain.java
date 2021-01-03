@@ -206,6 +206,9 @@ public class BattleshipMain extends Application {
             alert.setHeaderText("Enemy Ships Information");
             Ship tmpShip;
             String alertText = "";
+            if(enemyBoard.Ships.isEmpty()){
+                alertText = "No enemy ships are in the board";
+            }
             for (int i = 0;i <enemyBoard.Ships.size();i++){
                 tmpShip = enemyBoard.Ships.get(i);
                 if(!tmpShip.isHited()){
@@ -227,6 +230,9 @@ public class BattleshipMain extends Application {
         PlayerShots.setOnAction(ePlayerShots -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
             String alertText = "";
+            if(PlayerHistory.isEmpty()){
+                alertText = "You haven't shoot anything yet";
+            }
             for(int i =0;i<PlayerHistory.size();i++){
                 Cell tmpCell = PlayerHistory.get(i);
                 if(tmpCell.ship == null){
@@ -243,6 +249,9 @@ public class BattleshipMain extends Application {
         EnemyShots.setOnAction(eEnemyShots -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
             String alertText = "";
+            if(EnemyHistory.isEmpty()){
+                alertText = "No enemy moves yet";
+            }
             for(int i =0;i<EnemyHistory.size();i++){
                 Cell tmpCell = EnemyHistory.get(i);
                 if(tmpCell.ship == null){
@@ -314,7 +323,7 @@ public class BattleshipMain extends Application {
         Destroyer.setTextFill(Color.DARKRED);
 
 
-        VBox ShipIcons = new VBox(Carrier,Battleship,Cruiser,Submarine,Destroyer);
+        VBox ShipIcons = new VBox(BattleshipMenu,Carrier,Battleship,Cruiser,Submarine,Destroyer);
         ShipIcons.setAlignment(Pos.CENTER);
         root.setRight(ShipIcons);
 
@@ -370,12 +379,12 @@ public class BattleshipMain extends Application {
 
             if (!enemyTurn && PlayernummerOfMoves != 0) {
                 try {
-                    enemyTurn = !cell.shoot(true);
+                    /*enemyTurn = !cell.shoot(true);
                     if(PlayerHistory.size() == 5){
                         PlayerHistory.remove(0);
                     }
                     PlayerHistory.add(cell);
-                    enemyTurn = true;
+                    enemyTurn = true;*/
                     PlayernummerOfMoves--;
                     SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
                     root.setTop(SScore);
@@ -544,7 +553,7 @@ public class BattleshipMain extends Application {
                     boolean flag = (vert==1?true:false);
                     System.out.println(index+" "+CorX+" "+CorY+" "+vert);
                     Cell cell = enemyBoard.getCell(CorY,CorX);
-                    if(enemyBoard.placeShip(new Ship(ships[index], flag,scores[index],sinks[index],Names[index]), cell.x, cell.y)){
+                    if(enemyBoard.placeEnemyShip(new Ship(ships[index], flag,scores[index],sinks[index],Names[index]), cell.x, cell.y)){
                         type--;
                     }
                 }
@@ -657,6 +666,11 @@ public class BattleshipMain extends Application {
                 alert.showAndWait();
             }else{
                 cell.shoot(true);
+                PlayernummerOfMoves--;
+                if(PlayerHistory.size() == 5){
+                    PlayerHistory.remove(0);
+                }
+                PlayerHistory.add(cell);
                 enemyTurn = true;
             }
         }else{
