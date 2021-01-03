@@ -587,9 +587,9 @@ public class BattleshipMain extends Application {
         launch(args);
     }
 
-    private boolean isValidPoint(double x, double y) {
+    /*private boolean isValidPoint(double x, double y) {
         return x >= 0 && x < 10 && y >= 0 && y < 10;
-    }
+    }*/
 
     private void AI(double x, double y,boolean flag){
         NextMove.clear();
@@ -622,37 +622,38 @@ public class BattleshipMain extends Application {
     }
 
     private void playermove(String x,String y) throws FileNotFoundException {
-        if (enemyTurn){
-            Alert alert = new Alert(Alert.AlertType.WARNING,"Wait for your turn!!!");
-            alert.showAndWait();
-        }
         if (!running){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Wait for the game to start");
+            alert.showAndWait();
+        }
+        else if (enemyTurn){
+            Alert alert = new Alert(Alert.AlertType.WARNING,"Wait for your turn!!!");
             alert.showAndWait();
         }
         if(x == null || y == null){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Please Provide Coordinates!!!");
             alert.showAndWait();
-        }
-        int Corx = Integer.parseInt(x);
-        int Cory = Integer.parseInt(y);
-        if(Corx>=1 && Corx<=10 && Cory>1 && Cory<=10){
-            Cell cell = enemyBoard.getCell(Corx-1, Cory-1);
-            if(cell.wasShot){
-                Alert alert = new Alert(Alert.AlertType.WARNING,"You have already shoot this cell \n Please shoot another one");
-                alert.showAndWait();
-            }else{
-                cell.shoot(true);
-                PlayernummerOfMoves--;
-                if(PlayerHistory.size() == 5){
-                    PlayerHistory.remove(0);
+        }else {
+            int Corx = Integer.parseInt(x);
+            int Cory = Integer.parseInt(y);
+            if (Corx >= 1 && Corx <= 10 && Cory > 1 && Cory <= 10) {
+                Cell cell = enemyBoard.getCell(Corx - 1, Cory - 1);
+                if (cell.wasShot) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "You have already shoot this cell \n Please shoot another one");
+                    alert.showAndWait();
+                } else {
+                    cell.shoot(true);
+                    PlayernummerOfMoves--;
+                    if (PlayerHistory.size() == 5) {
+                        PlayerHistory.remove(0);
+                    }
+                    PlayerHistory.add(cell);
+                    enemyTurn = true;
                 }
-                PlayerHistory.add(cell);
-                enemyTurn = true;
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Invalid coordinates!!! \n Please try again");
+                alert.showAndWait();
             }
-        }else{
-            Alert alert = new Alert(Alert.AlertType.WARNING,"Invalid coordinates!!! \n Please try again");
-            alert.showAndWait();
         }
     }
 }
