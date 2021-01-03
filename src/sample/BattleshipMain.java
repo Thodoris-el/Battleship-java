@@ -70,17 +70,21 @@ public class BattleshipMain extends Application {
                     int CorX = Character.getNumericValue(data.charAt(4));
                     int vert = Character.getNumericValue(data.charAt(6));
                     boolean flag = (vert == 2);
-                    System.out.println(index+" "+CorX+" "+CorY+" "+vert);
                     Cell cell = playerBoard.getCell(CorX,CorY);
                     if(playerBoard.placeShip(new Ship(ships[index], flag,scores[index],sinks[index],Names[index]), cell.x, cell.y)){
                         shipsToPlace--;
                         if(shipsToPlace<0){
                             startGame();
                         }
+                    }else{
+                        FlagStart = false;
+                        restart();
                     }
                 }
             } catch (FileNotFoundException ee) {
                 System.out.print("File not found");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -139,7 +143,7 @@ public class BattleshipMain extends Application {
         Button ShootButton = new Button("Shoot");
 
         HBox ShootContent = new HBox(tmp1,tmp2,new VBox(new Text(""),ShootButton));
-        ShootContent.setAlignment(Pos.BASELINE_CENTER);
+        ShootContent.setAlignment(Pos.TOP_CENTER);
         root.setBottom(ShootContent);
         EventHandler<ActionEvent> ButonEvent = e -> {
             String corX = PositionX.getText();
@@ -441,23 +445,19 @@ public class BattleshipMain extends Application {
                     int CorX = Character.getNumericValue(data.charAt(4));
                     int vert = Character.getNumericValue(data.charAt(6));
                     boolean flag = (vert == 2);
-                    System.out.println(index+" "+CorX+" "+CorY+" "+vert);
                     Cell cell = enemyBoard.getCell(CorX,CorY);
                     if(enemyBoard.placeEnemyShip(new Ship(ships[index], flag,scores[index],sinks[index],Names[index]), cell.x, cell.y)){
                         type--;
                     }
+                    else{
+                        FlagStart = false;
+                        restart();
+                    }
                 }
             } catch (FileNotFoundException ee) {
                 System.out.print("File not found");
-            }
-        }
-
-        while (type >= 0) {
-            int x = random.nextInt(10);
-            int y = random.nextInt(10);
-
-            if (enemyBoard.placeEnemyShip(new Ship(ships[type], Math.random() < 0.5,scores[type],sinks[type],Names[type]), x, y)) {
-                type--;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
