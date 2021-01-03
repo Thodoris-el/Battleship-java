@@ -5,21 +5,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-
-import com.sun.javafx.scene.paint.GradientUtils;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -27,7 +22,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javafx.stage.StageStyle;
 import sample.Board.Cell;
 
 public class BattleshipMain extends Application {
@@ -35,35 +29,29 @@ public class BattleshipMain extends Application {
     static int EnemyScore = 0;
     private boolean running = false;
     private Board enemyBoard, playerBoard;
-    private ArrayList<Point2D> NextMove = new ArrayList<Point2D>(4);
-    private  ArrayList<Point2D> FinalNextMove = new ArrayList<Point2D>();
+    private ArrayList<Point2D> NextMove = new ArrayList<>(4);
+    private  ArrayList<Point2D> FinalNextMove = new ArrayList<>();
     Point2D previus = null;
-    Point2D start = null;
     private int PlayernummerOfMoves = 40;
     private int EnemynummerOfMoves = 40;
 
     private int shipsToPlace = 4;
-    private int ships[] = new int[5];
-    private int scores[] = new int[5];
-    private int sinks[] = new int[5];
-    private String Names[] = new String[5];
+    private int[] ships = new int[5];
+    private int[] scores = new int[5];
+    private int[] sinks = new int[5];
+    private String[] Names = new String[5];
     private File Scenario;
     private String ScenarioID;
-    ArrayList<Cell> PlayerHistory = new ArrayList<Cell>(5);
-    ArrayList<Cell> EnemyHistory = new ArrayList<Cell>(5);
+    ArrayList<Cell> PlayerHistory = new ArrayList<>(5);
+    ArrayList<Cell> EnemyHistory = new ArrayList<>(5);
 
     private boolean enemyTurn = false;
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     private boolean WhoStarts(){
         int temporary = random.nextInt(2);
-        if (temporary == 0){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return temporary != 0;
     }
 
     private void StartPlayer(){
@@ -80,7 +68,7 @@ public class BattleshipMain extends Application {
                     int CorY = Character.getNumericValue(data.charAt(2));
                     int CorX = Character.getNumericValue(data.charAt(4));
                     int vert = Character.getNumericValue(data.charAt(6));
-                    boolean flag = (vert==2?true:false);
+                    boolean flag = (vert == 2);
                     System.out.println(index+" "+CorX+" "+CorY+" "+vert);
                     Cell cell = playerBoard.getCell(CorX,CorY);
                     if(playerBoard.placeShip(new Ship(ships[index], flag,scores[index],sinks[index],Names[index]), cell.x, cell.y)){
@@ -154,16 +142,13 @@ public class BattleshipMain extends Application {
         HBox ShootContent = new HBox(tmp1,tmp2,new VBox(new Text(""),ShootButton));
         ShootContent.setAlignment(Pos.CENTER);
         root.setBottom(ShootContent);
-        EventHandler<ActionEvent> ButonEvent = new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                String corX = PositionX.getText();
-                String corY = PositionY.getText();
-                try {
-                    playermove(corX,corY);
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                }
+        EventHandler<ActionEvent> ButonEvent = e -> {
+            String corX = PositionX.getText();
+            String corY = PositionY.getText();
+            try {
+                playermove(corX,corY);
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
             }
         };
         ShootButton.setOnAction(ButonEvent);
@@ -193,9 +178,7 @@ public class BattleshipMain extends Application {
             }
         });
         MenuItem Exit = new MenuItem("Exit");
-        Exit.setOnAction(eExit ->{
-            System.exit(0);
-        });
+        Exit.setOnAction(eExit -> System.exit(0));
 
         Application.getItems().addAll(Start,Load,Exit);
 
@@ -205,62 +188,60 @@ public class BattleshipMain extends Application {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
             alert.setHeaderText("Enemy Ships Information");
             Ship tmpShip;
-            String alertText = "";
+            StringBuilder alertText = new StringBuilder();
             if(enemyBoard.Ships.isEmpty()){
-                alertText = "No enemy ships are in the board";
+                alertText = new StringBuilder("No enemy ships are in the board");
             }
             for (int i = 0;i <enemyBoard.Ships.size();i++){
                 tmpShip = enemyBoard.Ships.get(i);
                 if(!tmpShip.isHited()){
-                    alertText += tmpShip.shipType +": healthy\n";
+                    alertText.append(tmpShip.shipType).append(": healthy\n");
                 }
                 else{
                     if(tmpShip.isAlive()){
-                        alertText += tmpShip.shipType +": hitted\n";
+                        alertText.append(tmpShip.shipType).append(": hitted\n");
                     }
                     else{
-                        alertText += tmpShip.shipType +": sunk\n";
+                        alertText.append(tmpShip.shipType).append(": sunk\n");
                     }
                 }
             }
-            alert.setContentText(alertText);
+            alert.setContentText(alertText.toString());
             alert.showAndWait();
         });
         MenuItem PlayerShots = new MenuItem("Player Shots");
         PlayerShots.setOnAction(ePlayerShots -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
-            String alertText = "";
+            StringBuilder alertText = new StringBuilder();
             if(PlayerHistory.isEmpty()){
-                alertText = "You haven't shoot anything yet";
+                alertText = new StringBuilder("You haven't shoot anything yet");
             }
-            for(int i =0;i<PlayerHistory.size();i++){
-                Cell tmpCell = PlayerHistory.get(i);
-                if(tmpCell.ship == null){
-                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Missed Shot\n";
-                }else{
-                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Shot hit "+tmpCell.ship.shipType+"\n";
+            for (Cell tmpCell : PlayerHistory) {
+                if (tmpCell.ship == null) {
+                    alertText.append("(").append(tmpCell.x).append(",").append(tmpCell.y).append(")").append(": Missed Shot\n");
+                } else {
+                    alertText.append("(").append(tmpCell.x).append(",").append(tmpCell.y).append(")").append(": Shot hit ").append(tmpCell.ship.shipType).append("\n");
                 }
             }
-            alert.setContentText(alertText);
+            alert.setContentText(alertText.toString());
             alert.setHeaderText("Your Shot History");
             alert.showAndWait();
         });
         MenuItem EnemyShots = new MenuItem("EnemyShots");
         EnemyShots.setOnAction(eEnemyShots -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"");
-            String alertText = "";
+            StringBuilder alertText = new StringBuilder();
             if(EnemyHistory.isEmpty()){
-                alertText = "No enemy moves yet";
+                alertText = new StringBuilder("No enemy moves yet");
             }
-            for(int i =0;i<EnemyHistory.size();i++){
-                Cell tmpCell = EnemyHistory.get(i);
-                if(tmpCell.ship == null){
-                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Missed Shot\n";
-                }else{
-                    alertText += "("+tmpCell.x+","+tmpCell.y+")"+": Shot hit "+tmpCell.ship.shipType+"\n";
+            for (Cell tmpCell : EnemyHistory) {
+                if (tmpCell.ship == null) {
+                    alertText.append("(").append(tmpCell.x).append(",").append(tmpCell.y).append(")").append(": Missed Shot\n");
+                } else {
+                    alertText.append("(").append(tmpCell.x).append(",").append(tmpCell.y).append(")").append(": Shot hit ").append(tmpCell.ship.shipType).append("\n");
                 }
             }
-            alert.setContentText(alertText);
+            alert.setContentText(alertText.toString());
             alert.setHeaderText("Enemy Shot History");
             alert.showAndWait();
         });
@@ -336,16 +317,15 @@ public class BattleshipMain extends Application {
 
             if(shipsToPlace == -1 ){
                 shipsToPlace = -2;
+                Alert alert;
                 if(enemyTurn){
-                    Alert alert = new Alert(Alert.AlertType.WARNING,"Enemy starts first!!!\n Click anywhere in the enemy board to start the game!!!");
-                    alert.setHeaderText(null);
-                    alert.showAndWait();
+                    alert = new Alert(Alert.AlertType.WARNING, "Enemy starts first!!!\n Click anywhere in the enemy board to start the game!!!");
                 }
                 else{
-                    Alert alert = new Alert(Alert.AlertType.WARNING,"You start!!!\n Choose where to shoot!!!");
-                    alert.setHeaderText(null);
-                    alert.showAndWait();
+                    alert = new Alert(Alert.AlertType.WARNING, "You start!!!\n Choose where to shoot!!!");
                 }
+                alert.setHeaderText(null);
+                alert.showAndWait();
 
             }
 
@@ -390,7 +370,7 @@ public class BattleshipMain extends Application {
                     root.setTop(SScore);
                     //if (!cell.ship.isAlive()){
                     //}
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
 
@@ -419,7 +399,7 @@ public class BattleshipMain extends Application {
                     enemyMove();
                     SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
                     root.setTop(SScore);
-                }catch (Exception e){}
+                }catch (Exception ignored){}
         });
 
         playerBoard = new Board(false, event -> {
@@ -464,7 +444,7 @@ public class BattleshipMain extends Application {
 
     private void enemyMove() throws InterruptedException {
         while (enemyTurn && EnemynummerOfMoves != 0) {
-            int x = random.nextInt(10);;
+            int x = random.nextInt(10);
             int y = random.nextInt(10);
             boolean Flag = false;
             if(!FinalNextMove.isEmpty()){
@@ -508,7 +488,7 @@ public class BattleshipMain extends Application {
                     FinalNextMove.clear();
                     NextMove.clear();
                 }
-            }catch(Exception e){}
+            }catch(Exception ignored){}
 
             if (playerBoard.ships == 0) {
                 ButtonType retry = new ButtonType("Retry",ButtonBar.ButtonData.OK_DONE);
@@ -550,9 +530,9 @@ public class BattleshipMain extends Application {
                     int CorY = Character.getNumericValue(data.charAt(2));
                     int CorX = Character.getNumericValue(data.charAt(4));
                     int vert = Character.getNumericValue(data.charAt(6));
-                    boolean flag = (vert==1?true:false);
+                    boolean flag = (vert == 2);
                     System.out.println(index+" "+CorX+" "+CorY+" "+vert);
-                    Cell cell = enemyBoard.getCell(CorY,CorX);
+                    Cell cell = enemyBoard.getCell(CorX,CorY);
                     if(enemyBoard.placeEnemyShip(new Ship(ships[index], flag,scores[index],sinks[index],Names[index]), cell.x, cell.y)){
                         type--;
                     }
@@ -605,9 +585,6 @@ public class BattleshipMain extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-    private boolean isValidPoint(Point2D point) {
-        return isValidPoint(point.getX(), point.getY());
     }
 
     private boolean isValidPoint(double x, double y) {
