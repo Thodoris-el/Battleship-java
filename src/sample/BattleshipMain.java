@@ -117,7 +117,7 @@ public class BattleshipMain extends Application {
 
 
         BorderPane root = new BorderPane();
-        root.setPrefSize(1200, 800);
+        root.setPrefSize(1200, 700);
 
         SScore.setText("PLayer Score: "+ Score+" - Enemy Score: "+EnemyScore);
         SScore.setFont(Font.font("Arial", FontWeight.BOLD, 18));
@@ -467,16 +467,36 @@ public class BattleshipMain extends Application {
     void cleanup() {
         // stop animations reset model ect.
         this.primaryStage.close();
-        Board.DestroyerShip -= 1;
-        Board.SubmarineShip -= 1;
-        Board.CruiserShip = -1;
-        Board.BattleshipShip -= 1;
-        Board.CarrierShip = -1;
-        Board.EnemyDestroyerShip -= 1;
-        Board.EnemySubmarineShip -= 1;
-        Board.EnemyCruiserShip = -1;
-        Board.EnemyBattleshipShip -= 1;
-        Board.EnemyCarrierShip = -1;
+        if(Board.DestroyerShip >0) {
+            Board.DestroyerShip -= 1;
+        }
+        if(Board.SubmarineShip >0) {
+            Board.SubmarineShip -= 1;
+        }
+        if(Board.CruiserShip>0) {
+            Board.CruiserShip = -1;
+        }
+        if(Board.BattleshipShip>0) {
+            Board.BattleshipShip -= 1;
+        }
+        if(Board.CarrierShip>0) {
+            Board.CarrierShip = -1;
+        }
+        if(Board.EnemyDestroyerShip>0) {
+            Board.EnemyDestroyerShip -= 1;
+        }
+        if(Board.EnemySubmarineShip>0) {
+            Board.EnemySubmarineShip -= 1;
+        }
+        if(Board.EnemyCruiserShip>0) {
+            Board.EnemyCruiserShip = -1;
+        }
+        if(Board.EnemyBattleshipShip>0) {
+            Board.EnemyBattleshipShip -= 1;
+        }
+        if(Board.EnemyCarrierShip>0) {
+            Board.EnemyCarrierShip = -1;
+        }
 
     }
 
