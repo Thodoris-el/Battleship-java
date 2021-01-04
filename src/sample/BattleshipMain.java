@@ -57,7 +57,9 @@ public class BattleshipMain extends Application {
 
     private void StartPlayer(){
         if(ScenarioID == null){
-            System.out.println("Error");
+            Alert alert = new Alert(Alert.AlertType.WARNING,"Load A SCenario Then Start A Game!!!");
+            alert.setHeaderText("No Scenario Found");
+            alert.showAndWait();
         }
         else {
             try {
@@ -78,10 +80,14 @@ public class BattleshipMain extends Application {
                         }
                     }else{
                         FlagStart = false;
+                        cleanup();
                         restart();
                     }
                 }
             } catch (FileNotFoundException ee) {
+                Alert alert = new Alert(Alert.AlertType.WARNING,"Maybe The Name Of The File Is Not Right,\n Please Load The Right Scenario!");
+                alert.setHeaderText("Scenario Not Found!");
+                alert.showAndWait();
                 System.out.print("File not found");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,7 +96,7 @@ public class BattleshipMain extends Application {
     }
 
     private Parent createContent(boolean flag) throws FileNotFoundException {
-        ScenarioID = "default";
+        ScenarioID = Board.ScenarioID;
         ships[0] = 5;
         ships[1] = 4;
         ships[2] = 3;
@@ -186,7 +192,7 @@ public class BattleshipMain extends Application {
             TextInputDialog LoadText = new TextInputDialog();
             LoadText.setHeaderText("Enter the name of the Scenario");
             LoadText.showAndWait();
-            ScenarioID = LoadText.getEditor().getText();
+            Board.ScenarioID = LoadText.getEditor().getText();
             cleanup();
             try {
                 restart();
@@ -211,7 +217,7 @@ public class BattleshipMain extends Application {
             }
             for (int i = 0;i <enemyBoard.Ships.size();i++){
                 tmpShip = enemyBoard.Ships.get(i);
-                if(!tmpShip.isHited()){
+                if(!tmpShip.isHit()){
                     alertText.append(tmpShip.shipType).append(": healthy\n");
                 }
                 else{
@@ -421,7 +427,6 @@ public class BattleshipMain extends Application {
                     }
                 }
 
-
                 System.out.println("YOU LOSE");
 
             }
@@ -432,6 +437,9 @@ public class BattleshipMain extends Application {
         // place enemy ships
         int type = 4;
         if(ScenarioID == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING,"First Load A Scenario Then Start A Game!");
+            alert.setHeaderText("Scenario Not Provided");
+            alert.showAndWait();
             System.out.println("Error");
         }
         else {
@@ -455,6 +463,9 @@ public class BattleshipMain extends Application {
                     }
                 }
             } catch (FileNotFoundException ee) {
+                Alert alert = new Alert(Alert.AlertType.WARNING,"Scenario Name Might Not Be Right,\n Please Reload With The Right Name!");
+                alert.setHeaderText("Scenario Not Found");
+                alert.showAndWait();
                 System.out.print("File not found");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -631,6 +642,8 @@ public class BattleshipMain extends Application {
                 try {
                     restart();
                 } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING,"An Error Occurred,\n Please Re-Open The Game!!!");
+                    alert.showAndWait();
                     e.printStackTrace();
                 }
             }
@@ -649,6 +662,8 @@ public class BattleshipMain extends Application {
                 try {
                     restart();
                 } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING,"An Error Occurred,\n Please Re-Open The Game!!!");
+                    alert.showAndWait();
                     e.printStackTrace();
                 }
             }

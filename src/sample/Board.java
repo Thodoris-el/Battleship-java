@@ -1,5 +1,5 @@
 package sample;
-//libraries needed
+
 
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -23,7 +23,7 @@ import java.util.List;
 public class Board extends Parent {
 
     private VBox rows = new VBox();
-    private boolean enemy = false;
+    private boolean enemy;
     public int ships = 5; //number of ships
     static int CarrierShip = 0;
     static int BattleshipShip = 0;
@@ -36,6 +36,7 @@ public class Board extends Parent {
     static int EnemySubmarineShip = 0;
     static int EnemyDestroyerShip = 0;
     ArrayList<Ship> Ships = new ArrayList<>();
+    static String ScenarioID;
 
 
 
@@ -61,34 +62,47 @@ public class Board extends Parent {
     public boolean placeShip(Ship ship, int x, int y) throws FileNotFoundException {
         if (canPlaceShip(ship, x, y)) {
             int length = ship.type;
+            Color ShipColor = Color.BLACK;
 
             if (ship.vertical) {
                 for (int i = y; i < y + length; i++) {
                     Cell cell = getCell(x, i);
                     cell.ship = ship;
                     if (!enemy) {
-                        FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
-                        if(ship.shipType=="Carrier"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
-                        }
-                        else if(ship.shipType=="Battleship"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
-                        }
-                        else if(ship.shipType=="Cruiser"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
-                        }
-                        else if(ship.shipType=="Submarine"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
-                        }
-                        else{
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
-                        }
+                        try {
+                            FileInputStream inputstreamShip;
+                            switch (ship.shipType) {
+                                case "Carrier":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+                                    ShipColor = Color.YELLOW;
+                                    break;
+                                case "Battleship":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+                                    ShipColor = Color.DARKGREEN;
+                                    break;
+                                case "Cruiser":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+                                    ShipColor = Color.BROWN;
+                                    break;
+                                case "Submarine":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+                                    ShipColor = Color.BLUE;
+                                    break;
+                                default:
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+                                    ShipColor = Color.GRAY;
+                                    break;
+                            }
 
 
-                        Image shipimg = new Image(inputstreamShip);
+                            Image shipimg = new Image(inputstreamShip);
 
-                        cell.setFill(new ImagePattern(shipimg));
-                        cell.setStroke(Color.GREEN);
+                            cell.setFill(new ImagePattern(shipimg));
+                        }catch (FileNotFoundException e) {
+                            cell.setFill(ShipColor);
+                            System.out.println(e);
+                        }
+                            cell.setStroke(Color.GREEN);
                     }
                 }
             }
@@ -97,26 +111,37 @@ public class Board extends Parent {
                     Cell cell = getCell(i, y);
                     cell.ship = ship;
                     if (!enemy) {
-                        FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
-                        if(ship.shipType=="Carrier"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
-                        }
-                        else if(ship.shipType=="Battleship"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
-                        }
-                        else if(ship.shipType=="Cruiser"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
-                        }
-                        else if(ship.shipType=="Submarine"){
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
-                        }
-                        else{
-                            inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
-                        }
-                        Image shipimg = new Image(inputstreamShip);
+                        try {
+                            FileInputStream inputstreamShip;
+                            switch (ship.shipType) {
+                                case "Carrier":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+                                    ShipColor = Color.YELLOW;
+                                    break;
+                                case "Battleship":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+                                    ShipColor = Color.DARKGREEN;
+                                    break;
+                                case "Cruiser":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+                                    ShipColor = Color.BROWN;
+                                    break;
+                                case "Submarine":
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+                                    ShipColor = Color.BLUE;
+                                    break;
+                                default:
+                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+                                    ShipColor = Color.GRAY;
+                                    break;
+                            }
+                            Image shipimg = new Image(inputstreamShip);
 
-                        cell.setFill(new ImagePattern(shipimg));
-                        //cell.setFill(Color.WHITE);
+                            cell.setFill(new ImagePattern(shipimg));
+                        }catch(FileNotFoundException e) {
+                            cell.setFill(ShipColor);
+                            System.out.println(e);
+                        }
                         cell.setStroke(Color.GREEN);
                     }
                 }
@@ -137,10 +162,15 @@ public class Board extends Parent {
                     Cell cell = getCell(x, i);
                     cell.ship = ship;
                     if (!enemy) {
-                        FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
-                        Image shipimg = new Image(inputstreamShip);
+                        try {
+                            FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
+                            Image shipimg = new Image(inputstreamShip);
+                            cell.setFill(new ImagePattern(shipimg));
+                        }catch (FileNotFoundException e) {
+                            cell.setFill(Color.YELLOW);
+                            System.out.println(e);
+                        }
 
-                        cell.setFill(new ImagePattern(shipimg));
                         cell.setStroke(Color.GREEN);
                     }
                 }
@@ -150,11 +180,14 @@ public class Board extends Parent {
                     Cell cell = getCell(i, y);
                     cell.ship = ship;
                     if (!enemy) {
-                        FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
-                        Image shipimg = new Image(inputstreamShip);
-
-                        cell.setFill(new ImagePattern(shipimg));
-                        //cell.setFill(Color.WHITE);
+                        try {
+                            FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
+                            Image shipimg = new Image(inputstreamShip);
+                            cell.setFill(new ImagePattern(shipimg));
+                        }catch (FileNotFoundException e){
+                            cell.setFill(Color.YELLOW);
+                            System.out.println(e);
+                        }
                         cell.setStroke(Color.GREEN);
                     }
                 }
@@ -178,7 +211,7 @@ public class Board extends Parent {
                 new Point2D(x, y + 1)
         };
 
-        List<Cell> neighbors = new ArrayList<Cell>();
+        List<Cell> neighbors = new ArrayList<>();
 
         for (Point2D p : points) {
             try{
@@ -219,9 +252,7 @@ public class Board extends Parent {
                                 return false;
                             }
                         } catch (OversizeException e) {
-                           /* Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();
-                            return false;*/
+                           System.out.println(e);
                         }
                     }
 
@@ -256,9 +287,7 @@ public class Board extends Parent {
                                 return false;
                             }
                         } catch (OversizeException e) {
-                            /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();
-                            return false;*/
+                            System.out.println(e);
                         }
                     }
 
@@ -308,9 +337,7 @@ public class Board extends Parent {
                                 return false;
                             }
                         } catch (OversizeException e) {
-                           /* Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();
-                            return false;*/
+                           System.out.println(e);
                         }
                     }
 
@@ -345,9 +372,7 @@ public class Board extends Parent {
                                 return false;
                             }
                         } catch (OversizeException e) {
-                            /*Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                            alert.showAndWait();
-                            return false;*/
+                            System.out.println(e);
                         }
                     }
 
@@ -400,13 +425,15 @@ public class Board extends Parent {
 
         public boolean shoot(boolean flag) throws FileNotFoundException {
             wasShot = true;
-            FileInputStream inputstreamWave = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/wave.png");
-            Image wave = new Image(inputstreamWave);
+            try {
+                FileInputStream inputstreamWave = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/wave.png");
+                Image wave = new Image(inputstreamWave);
 
-            setFill(new ImagePattern(wave));
-
-            FileInputStream inputstreamFire = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/fire.png");
-            Image fire = new Image(inputstreamFire);
+                setFill(new ImagePattern(wave));
+            }catch (FileNotFoundException e){
+                setFill(Color.BLACK);
+                System.out.println(e);
+            }
 
             if (ship != null) {
                 ship.hit();
@@ -415,7 +442,14 @@ public class Board extends Parent {
                 else{
                     BattleshipMain.EnemyScore += ship.Score;
                 }
-                setFill(new ImagePattern(fire));
+                try {
+                    FileInputStream inputstreamFire = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/fire.png");
+                    Image fire = new Image(inputstreamFire);
+                    setFill(new ImagePattern(fire));
+                }catch(FileNotFoundException e){
+                    setFill(Color.RED);
+                    System.out.println(e);
+                }
                 if (!ship.isAlive()) {
                     if(flag){
                         BattleshipMain.Score += ship.SinkBonus;
@@ -450,23 +484,23 @@ public class Board extends Parent {
     }
 
     private boolean ShipNumber(Ship ship) throws InvalidCountExeception {
-        if (ship.shipType == "Carrier" && (CarrierShip + 1) <= 1){
+        if (ship.shipType.equals("Carrier") && (CarrierShip + 1) <= 1){
             CarrierShip += 1;
             return true;
         }
-        if (ship.shipType == "Battleship" && (BattleshipShip + 1) <= 1){
+        if (ship.shipType.equals("Battleship") && (BattleshipShip + 1) <= 1){
             BattleshipShip += 1;
             return true;
         }
-        if (ship.shipType == "Cruiser" && (CruiserShip + 1) <= 1){
+        if (ship.shipType.equals("Cruiser") && (CruiserShip + 1) <= 1){
             CruiserShip += 1;
             return true;
         }
-        if (ship.shipType == "Submarine" && (SubmarineShip + 1) <= 1){
+        if (ship.shipType.equals("Submarine") && (SubmarineShip + 1) <= 1){
             SubmarineShip += 1;
             return true;
         }
-        if (ship.shipType == "Destroyer" && (DestroyerShip + 1) <= 1){
+        if (ship.shipType.equals("Destroyer") && (DestroyerShip + 1) <= 1){
             DestroyerShip += 1;
             return true;
         }else{
@@ -475,23 +509,23 @@ public class Board extends Parent {
     }
 
     private boolean EnemyShipNumber(Ship ship) throws InvalidCountExeception {
-        if (ship.shipType == "Carrier" && (EnemyCarrierShip + 1) <= 1){
+        if (ship.shipType.equals("Carrier") && (EnemyCarrierShip + 1) <= 1){
             EnemyCarrierShip += 1;
             return true;
         }
-        if (ship.shipType == "Battleship" && (EnemyBattleshipShip + 1) <= 1){
+        if (ship.shipType.equals("Battleship") && (EnemyBattleshipShip + 1) <= 1){
             EnemyBattleshipShip += 1;
             return true;
         }
-        if (ship.shipType == "Cruiser" && (EnemyCruiserShip + 1) <= 1){
+        if (ship.shipType.equals("Cruiser") && (EnemyCruiserShip + 1) <= 1){
             EnemyCruiserShip += 1;
             return true;
         }
-        if (ship.shipType == "Submarine" && (EnemySubmarineShip + 1) <= 1){
+        if (ship.shipType.equals("Submarine") && (EnemySubmarineShip + 1) <= 1){
             EnemySubmarineShip += 1;
             return true;
         }
-        if (ship.shipType == "Destroyer" && (EnemyDestroyerShip + 1) <= 1){
+        if (ship.shipType.equals("Destroyer") && (EnemyDestroyerShip + 1) <= 1){
             EnemyDestroyerShip += 1;
             return true;
         }else{
