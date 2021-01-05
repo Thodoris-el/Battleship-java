@@ -1,10 +1,12 @@
 package sample;
 
 
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,8 +40,6 @@ public class Board extends Parent {
     ArrayList<Ship> Ships = new ArrayList<>();
     static String ScenarioID;
 
-
-
     public Board(boolean enemy) {
 
 
@@ -49,6 +49,25 @@ public class Board extends Parent {
             for (int x = 0; x < 10; x++) {
                 Cell c = new Cell(x, y, this);
 
+                row.getChildren().add(c);
+            }
+
+            rows.getChildren().add(row);
+        }
+
+
+        getChildren().add(rows);
+    }
+
+    public Board(boolean enemy, EventHandler<? super MouseEvent> handler) {
+
+
+        this.enemy = enemy;
+        for (int y = 0; y < 10; y++) {
+            HBox row = new HBox();
+            for (int x = 0; x < 10; x++) {
+                Cell c = new Cell(x, y, this);
+                c.setOnMouseClicked(handler);
                 row.getChildren().add(c);
             }
 

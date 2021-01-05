@@ -15,6 +15,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -147,6 +149,17 @@ public class BattleshipMain extends Application {
         VBox tmp2 = new VBox(LabelY,PositionY);
 
         Button ShootButton = new Button("Shoot");
+        try{
+            FileInputStream cannon = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cannon.png");
+            Image cannonImg= new Image(cannon);
+            ImageView cannonView = new ImageView(cannonImg);
+            cannonView.setFitHeight(40);
+            cannonView.setFitWidth(40);
+            cannonView.setPreserveRatio(true);
+            ShootButton.setGraphic(cannonView);
+        }catch (FileNotFoundException e){
+            System.out.println(e);
+        }
 
         HBox ShootContent = new HBox(tmp1,tmp2,new VBox(new Text(""),ShootButton));
         ShootContent.setAlignment(Pos.TOP_CENTER);
@@ -193,6 +206,7 @@ public class BattleshipMain extends Application {
             LoadText.setHeaderText("Enter the name of the Scenario");
             LoadText.showAndWait();
             Board.ScenarioID = LoadText.getEditor().getText();
+
             cleanup();
             try {
                 restart();
@@ -328,10 +342,15 @@ public class BattleshipMain extends Application {
 
 
         VBox ShipIcons = new VBox(BattleshipMenu,Carrier,Battleship,Cruiser,Submarine,Destroyer);
-        ShipIcons.setAlignment(Pos.CENTER);
+        ShipIcons.setAlignment(Pos.CENTER_LEFT);
+        ShipIcons.setSpacing(10);
         root.setRight(ShipIcons);
 
-        enemyBoard = new Board(true);
+        enemyBoard = new Board(true,event -> {
+            Cell cell = (Cell) event.getSource();
+            PositionX.setText(String.valueOf(cell.x));
+            PositionY.setText(String.valueOf(cell.y));
+        });
 
 
         playerBoard = new Board(false);
@@ -342,11 +361,11 @@ public class BattleshipMain extends Application {
 
 
         Label enemyLabel = new Label("Enemy Board");
-        enemyLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        enemyLabel.setFont(Font.font("Abyssinica SIL", FontWeight.BOLD, 24));
         enemyLabel.setTextFill(Color.DARKRED);
 
         Label playerLabel = new Label("Player's Board");
-        playerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        playerLabel.setFont(Font.font("Abyssinica SIL", FontWeight.BOLD, 24));
         playerLabel.setTextFill(Color.DARKRED);
 
 
@@ -358,7 +377,6 @@ public class BattleshipMain extends Application {
 
         root.setLeft(vbox2);
         root.setCenter(vbox1);
-
         return root;
     }
 
@@ -595,7 +613,7 @@ public class BattleshipMain extends Application {
             Alert alert = new Alert(Alert.AlertType.WARNING,"Wait for your turn!!!");
             alert.showAndWait();
         }
-        if(x == null || y == null){
+        else if(x == null || y == null){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Please Provide Coordinates!!!");
             alert.showAndWait();
         }else {
@@ -671,5 +689,7 @@ public class BattleshipMain extends Application {
             System.out.println("YOU WIN");
         }
     }
+
+
 }
 
