@@ -22,6 +22,15 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Board Class</h1>
+ * <p>This Class implements the board in whitch the game is played.</p>
+ *
+ * @author Thodoris Anagnostopoulos
+ * @version 2.0
+ * @since 2020-1-5
+ */
+
 public class Board extends Parent {
 
     private VBox rows = new VBox();
@@ -40,6 +49,11 @@ public class Board extends Parent {
     ArrayList<Ship> Ships = new ArrayList<>();
     static String ScenarioID;
 
+
+    /**
+     * First Constructor of the board class
+     * @param enemy Boolean that defines if the board belongs to the enemy or to the player
+     */
     public Board(boolean enemy) {
 
 
@@ -59,6 +73,11 @@ public class Board extends Parent {
         getChildren().add(rows);
     }
 
+    /**
+     * Second Constructor of the board class
+     * @param enemy Boolean that defines if the board belongs to the enemy or to the player
+     * @param handler Receives the cell in which the palyer clicks
+     */
     public Board(boolean enemy, EventHandler<? super MouseEvent> handler) {
 
 
@@ -78,6 +97,14 @@ public class Board extends Parent {
         getChildren().add(rows);
     }
 
+    /**
+     * Place a player's ship in the board if it is possible
+     * @param ship the ship that is to be puttied in the board
+     * @param x Coordinate X of the board
+     * @param y Coordinate Y of the board
+     * @return true if the ship is placed
+     * @throws FileNotFoundException if image of the ship is not found
+     */
     public boolean placeShip(Ship ship, int x, int y) throws FileNotFoundException {
         if (canPlaceShip(ship, x, y)) {
             int length = ship.type;
@@ -172,6 +199,14 @@ public class Board extends Parent {
         return false;
     }
 
+    /**
+     * Place a enemy's ship in the board if it is possible
+     * @param ship the ship that is to be puttied in the board
+     * @param x Coordinate X of the board
+     * @param y Coordinate Y of the board
+     * @return true if the ship is placed
+     * @throws FileNotFoundException if image of the ship is not found
+     */
     public boolean placeEnemyShip(Ship ship, int x, int y) throws FileNotFoundException {
         if (canPlaceEnemyShip(ship, x, y)) {
             int length = ship.type;
@@ -218,10 +253,23 @@ public class Board extends Parent {
         return false;
     }
 
+    /**
+     * Return the cell with the given coordinates
+     * @param x Coordinate X of the board
+     * @param y Coordinate Y of the Board
+     * @return Return a cell
+     */
     public Cell getCell(int x, int y) {
         return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
     }
 
+    /**
+     * Return the neighbors of the cell with the given coordinates.
+     * This neighbors are the (x+1,y) - (x-1,y) - (x,y+1) - (x,y-1)
+     * @param x Coordinate X of the board
+     * @param y Coordinate Y of the board
+     * @return Returns a cell array that has the neighboors ot the given cell
+     */
     private Cell[] getNeighbors(int x, int y) {
         Point2D[] points = new Point2D[] {
                 new Point2D(x - 1, y),
@@ -244,6 +292,13 @@ public class Board extends Parent {
         return neighbors.toArray(new Cell[0]);
     }
 
+    /**
+     * Function that return true only if the given player's ship can be placed in the given coordinates
+     * @param ship The player's ship
+     * @param x Coordinate X of the board
+     * @param y Coordinate Y of the board
+     * @return True if the ship can be placed
+     */
     private boolean canPlaceShip(Ship ship, int x, int y) {
         int length = ship.type;
 
@@ -329,6 +384,13 @@ public class Board extends Parent {
         return true;
     }
 
+    /**
+     * Function that return true only if the given enemy's ship can be placed in the given coordinates
+     * @param ship The player's ship
+     * @param x Coordinate X of the board
+     * @param y Coordinate Y of the board
+     * @return True if the ship can be placed
+     */
     private boolean canPlaceEnemyShip(Ship ship, int x, int y) {
         int length = ship.type;
 
@@ -414,10 +476,23 @@ public class Board extends Parent {
         return true;
     }
 
+    /**
+     * Returns true if the given point belongs to the board.
+     * @param point The given point
+     * @return true if the given point belongs to the board
+     * @throws OversizeException exception if the point is out of board
+     */
     private boolean isValidPoint(Point2D point) throws OversizeException {
         return isValidPoint(point.getX(), point.getY());
     }
 
+    /**
+     * Returns true if the given coordinates belongs to the board.
+     * @param x Coordinate X
+     * @param y Coordinate Y
+     * @return true if the given coordinates belongs to the board
+     * @throws OversizeException exception if the coordinates is out of board
+     */
     private boolean isValidPoint(double x, double y) throws OversizeException {
         if (x >= 0 && x < 10 && y >= 0 && y < 10){
             return true;
@@ -426,6 +501,10 @@ public class Board extends Parent {
         }
     }
 
+    /**
+     * <h1>Cell Class</h1>
+     * <p>This class implements the cell class that shapes the board</p>
+     */
     public class Cell extends Rectangle {
         public int x, y;
         public Ship ship = null;
@@ -433,6 +512,12 @@ public class Board extends Parent {
 
         private Board board;
 
+        /**
+         * The Cell constructor
+         * @param x Cell coordinate X
+         * @param y Cell coordinate Y
+         * @param board Board that will include the cell
+         */
         public Cell(int x, int y, Board board) {
             super(25, 25);
             this.x = x;
@@ -442,6 +527,12 @@ public class Board extends Parent {
             setStroke(Color.BLACK);
         }
 
+        /**
+         * Shoot the given cell and repaint the cell according to the result of the shoot
+         * @param flag true if the player shots
+         * @return true if the shot is successful
+         * @throws FileNotFoundException exception if the images for the fire(successful shot) and the wave(unsuccessful shot) is not found
+         */
         public boolean shoot(boolean flag) throws FileNotFoundException {
             wasShot = true;
             try {
@@ -485,6 +576,12 @@ public class Board extends Parent {
         }
     }
 
+    /**
+     * Retyrns true if the given cell doesn't have a ship
+     * @param cell given cell
+     * @return true if the cell is empty
+     * @throws OverlapTilesException Exception if the cell has a ship
+     */
     private boolean iSCellEmpty(Cell cell) throws OverlapTilesException {
         if (cell.ship == null){
             return true;
@@ -493,6 +590,12 @@ public class Board extends Parent {
         }
     }
 
+    /**
+     * Returns true if the neighboors of a cell are empty
+     * @param cell given cell
+     * @return true if the neighboors doesn't have a ship
+     * @throws AdjacentTilesException Exception if one ore more neughboors aren't empty
+     */
     private boolean isNeighborEmpty(Cell cell) throws AdjacentTilesException {
         if (cell.ship == null){
             return true;
@@ -502,6 +605,12 @@ public class Board extends Parent {
         }
     }
 
+    /**
+     * Returns true if the given type of the player's ship hasn't already been put to a cell
+     * @param ship given ship
+     * @return true if the given type of the ship hasn't already been put to a cell
+     * @throws InvalidCountExeception Exception if the given shop type has a;ready benn put to a cell
+     */
     private boolean ShipNumber(Ship ship) throws InvalidCountExeception {
         if (ship.shipType.equals("Carrier") && (CarrierShip + 1) <= 1){
             CarrierShip += 1;
@@ -527,6 +636,12 @@ public class Board extends Parent {
         }
     }
 
+    /**
+     * Returns true if the given type of the player's ship hasn't already been put to a cell
+     * @param ship given ship
+     * @return true if the given type of the ship hasn't already been put to a cell
+     * @throws InvalidCountExeception Exception if the given shop type has a;ready benn put to a cell
+     */
     private boolean EnemyShipNumber(Ship ship) throws InvalidCountExeception {
         if (ship.shipType.equals("Carrier") && (EnemyCarrierShip + 1) <= 1){
             EnemyCarrierShip += 1;

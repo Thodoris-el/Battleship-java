@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -25,6 +26,14 @@ import javafx.stage.Stage;
 
 import sample.Board.Cell;
 
+/**
+ * <h1>Battleship Game</h1>
+ * <p>This class implements the main game</p>
+ *
+ * @author Thodoris Anagnostopoulos
+ * @version 2.0
+ * @since 2020-1-5
+ */
 public class BattleshipMain extends Application {
     static int Score = 0;
     static int EnemyScore = 0;
@@ -52,11 +61,18 @@ public class BattleshipMain extends Application {
 
     private final Random random = new Random();
 
+    /**
+     * This function returns randomly who will start first, the enemy or the player
+     * @return true if the enemy starts first
+     */
     private boolean WhoStarts(){
         int temporary = random.nextInt(2);
         return temporary != 0;
     }
 
+    /**
+     * This function puts the player's ship in the board according to the given scenario
+     */
     private void StartPlayer(){
         if(ScenarioID == null){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Load A SCenario Then Start A Game!!!");
@@ -97,6 +113,16 @@ public class BattleshipMain extends Application {
         }
     }
 
+    /**
+     * This functions create everything needed for the game.
+     * Create the application and the deatil menu
+     * Create the Shoot button
+     * Create the Score
+     * Create the enemy's and the player's board
+     * @param flag if true it loads the scenario to start the game
+     * @return
+     * @throws FileNotFoundException exception of the images that are shown in the game is not found
+     */
     private Parent createContent(boolean flag) throws FileNotFoundException {
         ScenarioID = Board.ScenarioID;
         ships[0] = 5;
@@ -214,10 +240,20 @@ public class BattleshipMain extends Application {
                 e.printStackTrace();
             }
         });
+        MenuItem Click = new MenuItem("Click");
+        Click.setOnAction(eClick -> {
+            FlagStart = false;
+            cleanup();
+            try {
+                restart();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         MenuItem Exit = new MenuItem("Exit");
         Exit.setOnAction(eExit -> System.exit(0));
 
-        Application.getItems().addAll(Start,Load,Exit);
+        Application.getItems().addAll(Start,Load,Click,Exit);
 
         Menu Details = new Menu("Details");
         MenuItem EnemyShips = new MenuItem("Enemy Ships");
@@ -352,8 +388,30 @@ public class BattleshipMain extends Application {
             PositionY.setText(String.valueOf(cell.y));
         });
 
-
-        playerBoard = new Board(false);
+        if(FlagStart) {
+            playerBoard = new Board(false);
+        }else{
+            playerBoard = new Board(false, event -> {
+                if(running){
+                    return;
+                }
+                Cell cell = (Cell) event.getSource();
+                try {
+                    if (shipsToPlace < 0 && playerBoard.placeShip(new Ship(ships[shipsToPlace], event.getButton() == MouseButton.PRIMARY,scores[shipsToPlace],sinks[shipsToPlace],Names[shipsToPlace]), cell.x, cell.y)) {
+                        shipsToPlace--;
+                        if (shipsToPlace < 0) {
+                            try {
+                                startGame();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
 
         if(flag){
             StartPlayer();
@@ -380,6 +438,10 @@ public class BattleshipMain extends Application {
         return root;
     }
 
+    /**
+     * This funtion implements the enemy move. The enemy behaves like ahuman player.
+     * @throws InterruptedException
+     */
     private void enemyMove() throws InterruptedException {
         while (enemyTurn && EnemynummerOfMoves != 0) {
             int x = random.nextInt(10);
@@ -451,6 +513,10 @@ public class BattleshipMain extends Application {
         }
     }
 
+    /**
+     * this function puts the enemy ships in the enemy's board according to the scenaruio
+     * @throws FileNotFoundException
+     */
     private void startGame() throws FileNotFoundException {
         // place enemy ships
         int type = 4;
@@ -493,6 +559,9 @@ public class BattleshipMain extends Application {
         running = true;
     }
 
+    /**
+     * Clear all the content that has been created
+     */
     void cleanup() {
         // stop animations reset model ect.
         this.primaryStage.close();
@@ -529,6 +598,10 @@ public class BattleshipMain extends Application {
 
     }
 
+    /**
+     * Restart the scene
+     * @throws Exception
+     */
     void restart() throws Exception {
         cleanup();
         BattleshipMain app = new BattleshipMain();
@@ -537,6 +610,9 @@ public class BattleshipMain extends Application {
 
     public Stage primaryStage;
     @Override
+    /**
+     * This Function start the scene and creates everything that is needed for the game
+     */
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         Parent root = createContent(FlagStart);
@@ -570,10 +646,20 @@ public class BattleshipMain extends Application {
         }
     }
 
+    /**
+     * launch the game
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * The AI that makes the computer play as a human player
+     * @param x Coordinate X of the successful hit
+     * @param y Coordinate Y of the successful hit
+     * @param flag
+     */
     private void AI(double x, double y,boolean flag){
         NextMove.clear();
         if(previus.getX() == x){
@@ -604,6 +690,12 @@ public class BattleshipMain extends Application {
         previus = new Point2D(x,y);
     }
 
+    /**
+     * This function implements the player move
+     * @param x Coordinate X of the hit
+     * @param y Coordinate Y of the hit
+     * @throws FileNotFoundException
+     */
     private void playermove(String x,String y) throws FileNotFoundException {
         if (!running){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Wait for the game to start");
@@ -640,6 +732,9 @@ public class BattleshipMain extends Application {
         }
     }
 
+    /**
+     * Function that implements the end of the game
+     */
     public void End() {
         if (PlayernummerOfMoves == 0 && EnemynummerOfMoves == 0) {
             ButtonType retry = new ButtonType("Retry", ButtonBar.ButtonData.OK_DONE);
