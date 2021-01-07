@@ -24,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javafx.util.Duration;
 import sample.Board.Cell;
 
 /**
@@ -125,6 +126,20 @@ public class BattleshipMain extends Application {
      */
     private Parent createContent(boolean flag) throws FileNotFoundException {
         ScenarioID = Board.ScenarioID;
+
+        String audioFile = "/home/thodoris/BattlesShipTest/src/sample/Makai Symphony - Dragon Castle.mp3";
+        File  songFile = new File(audioFile);
+        Media media = new Media(songFile.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayer.seek(Duration.ZERO);
+            }
+        });
+        mediaPlayer.setAutoPlay(true);
+
+
         ships[0] = 5;
         ships[1] = 4;
         ships[2] = 3;
@@ -395,9 +410,10 @@ public class BattleshipMain extends Application {
                 if(running){
                     return;
                 }
+                System.out.println("good");
                 Cell cell = (Cell) event.getSource();
                 try {
-                    if (shipsToPlace < 0 && playerBoard.placeShip(new Ship(ships[shipsToPlace], event.getButton() == MouseButton.PRIMARY,scores[shipsToPlace],sinks[shipsToPlace],Names[shipsToPlace]), cell.x, cell.y)) {
+                    if (shipsToPlace >= 0 && playerBoard.placeShip(new Ship(ships[shipsToPlace], event.getButton() == MouseButton.PRIMARY,scores[shipsToPlace],sinks[shipsToPlace],Names[shipsToPlace]), cell.x, cell.y)) {
                         shipsToPlace--;
                         if (shipsToPlace < 0) {
                             try {
@@ -520,7 +536,17 @@ public class BattleshipMain extends Application {
     private void startGame() throws FileNotFoundException {
         // place enemy ships
         int type = 4;
-        if(ScenarioID == null){
+        if(!FlagStart){
+            while (type >= 0) {
+                int x = random.nextInt(10);
+                int y = random.nextInt(10);
+
+                if (enemyBoard.placeEnemyShip(new Ship(ships[type], Math.random() < 0.5,scores[type],sinks[type],Names[type]), x, y)) {
+                    type--;
+                }
+            }
+        }
+        else if(ScenarioID == null){
             Alert alert = new Alert(Alert.AlertType.WARNING,"First Load A Scenario Then Start A Game!");
             alert.setHeaderText("Scenario Not Provided");
             alert.showAndWait();

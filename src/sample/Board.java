@@ -402,8 +402,12 @@ public class Board extends Parent {
                     try {
                         iSCellEmpty(cell);
                     } catch (OverlapTilesException e) {
-                        Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage() + x + i);
-                        alert.showAndWait();
+                        if(BattleshipMain.FlagStart) {
+                            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage() + x + i);
+                            alert.showAndWait();
+                        }else{
+                            System.out.println(e);
+                        }
                         return false;
                     }
 
@@ -413,8 +417,12 @@ public class Board extends Parent {
                             try {
                                 isNeighborEmpty(neighbor);
                             } catch (AdjacentTilesException e) {
-                                Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                                alert.showAndWait();
+                                if(BattleshipMain.FlagStart) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                                    alert.showAndWait();
+                                }else{
+                                    System.out.println(e);
+                                }
                                 return false;
                             }
                         } catch (OversizeException e) {
@@ -423,8 +431,12 @@ public class Board extends Parent {
                     }
 
                 } catch (OversizeException e) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                    alert.showAndWait();
+                    if(BattleshipMain.FlagStart) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                        alert.showAndWait();
+                    }else{
+                        System.out.println(e);
+                    }
                     return false;
                 }
             }
@@ -437,8 +449,12 @@ public class Board extends Parent {
                     try {
                         iSCellEmpty(cell);
                     } catch (OverlapTilesException e) {
-                        Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                        alert.showAndWait();
+                        if(BattleshipMain.FlagStart) {
+                            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                            alert.showAndWait();
+                        }else{
+                            System.out.println(e);
+                        }
                         return false;
                     }
 
@@ -448,8 +464,12 @@ public class Board extends Parent {
                             try {
                                 isNeighborEmpty(neighbor);
                             } catch (AdjacentTilesException e) {
-                                Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                                alert.showAndWait();
+                                if(BattleshipMain.FlagStart) {
+                                    Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                                    alert.showAndWait();
+                                }else{
+                                    System.out.println(e);
+                                }
                                 return false;
                             }
                         } catch (OversizeException e) {
@@ -458,8 +478,12 @@ public class Board extends Parent {
                     }
 
                 } catch (OversizeException e) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-                    alert.showAndWait();
+                    if(BattleshipMain.FlagStart) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+                        alert.showAndWait();
+                    }else{
+                        System.out.println(e);
+                    }
                     return false;
                 }
 
@@ -469,8 +493,12 @@ public class Board extends Parent {
        try {
             EnemyShipNumber(ship);
         } catch (InvalidCountExeception e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-            alert.showAndWait();
+           if(BattleshipMain.FlagStart) {
+               Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+               alert.showAndWait();
+           }else{
+               System.out.println(e);
+           }
             return false;
         }
         return true;
