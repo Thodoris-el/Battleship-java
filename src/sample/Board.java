@@ -1,6 +1,7 @@
 package sample;
 
 
+import com.sun.webkit.network.URLs;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ import sample.Exceptions.OversizeException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,26 +118,32 @@ public class Board extends Parent {
                     cell.ship = ship;
                     if (!enemy) {
                         try {
+                            URL urlShip;
                             FileInputStream inputstreamShip;
                             switch (ship.shipType) {
                                 case "Carrier":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+                                    urlShip = getClass().getResource("carrier.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
                                     ShipColor = Color.YELLOW;
                                     break;
                                 case "Battleship":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+                                    urlShip = getClass().getResource("batteship.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
                                     ShipColor = Color.DARKGREEN;
                                     break;
                                 case "Cruiser":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+                                    urlShip = getClass().getResource("cruiser.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
                                     ShipColor = Color.BROWN;
                                     break;
                                 case "Submarine":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+                                    urlShip = getClass().getResource("submarine.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
                                     ShipColor = Color.BLUE;
                                     break;
                                 default:
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+                                    urlShip = getClass().getResource("destroyer.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
                                     ShipColor = Color.GRAY;
                                     break;
                             }
@@ -158,26 +166,32 @@ public class Board extends Parent {
                     cell.ship = ship;
                     if (!enemy) {
                         try {
+                            URL urlShip;
                             FileInputStream inputstreamShip;
                             switch (ship.shipType) {
                                 case "Carrier":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+                                    urlShip = getClass().getResource("carrier.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
                                     ShipColor = Color.YELLOW;
                                     break;
                                 case "Battleship":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+                                    urlShip = getClass().getResource("batteship.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
                                     ShipColor = Color.DARKGREEN;
                                     break;
                                 case "Cruiser":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+                                    urlShip = getClass().getResource("cruiser.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
                                     ShipColor = Color.BROWN;
                                     break;
                                 case "Submarine":
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+                                    urlShip = getClass().getResource("submarine.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
                                     ShipColor = Color.BLUE;
                                     break;
                                 default:
-                                    inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+                                    urlShip = getClass().getResource("destroyer.png");
+                                    inputstreamShip = new FileInputStream(urlShip.getPath());//("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
                                     ShipColor = Color.GRAY;
                                     break;
                             }
@@ -217,7 +231,8 @@ public class Board extends Parent {
                     cell.ship = ship;
                     if (!enemy) {
                         try {
-                            FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
+                            URL URLship = getClass().getResource("ship.png");
+                            FileInputStream inputstreamShip = new FileInputStream(URLship.getPath());//("/home/thodoris/BattlesShipTest/src/sample/ship.png");
                             Image shipimg = new Image(inputstreamShip);
                             cell.setFill(new ImagePattern(shipimg));
                         }catch (FileNotFoundException e) {
@@ -235,7 +250,8 @@ public class Board extends Parent {
                     cell.ship = ship;
                     if (!enemy) {
                         try {
-                            FileInputStream inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/ship.png");
+                            URL URLship = getClass().getResource("ship.png");
+                            FileInputStream inputstreamShip = new FileInputStream(URLship.getPath());//("/home/thodoris/BattlesShipTest/src/sample/ship.png");
                             Image shipimg = new Image(inputstreamShip);
                             cell.setFill(new ImagePattern(shipimg));
                         }catch (FileNotFoundException e){
@@ -521,7 +537,7 @@ public class Board extends Parent {
      * @return true if the given coordinates belongs to the board
      * @throws OversizeException exception if the coordinates is out of board
      */
-    private boolean isValidPoint(double x, double y) throws OversizeException {
+    public boolean isValidPoint(double x, double y) throws OversizeException {
         if (x >= 0 && x < 10 && y >= 0 && y < 10){
             return true;
         }else{
@@ -564,7 +580,8 @@ public class Board extends Parent {
         public boolean shoot(boolean flag) throws FileNotFoundException {
             wasShot = true;
             try {
-                FileInputStream inputstreamWave = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/wave.png");
+                URL urlWave = getClass().getResource("wave.png");
+                FileInputStream inputstreamWave = new FileInputStream(urlWave.getPath());//("/home/thodoris/BattlesShipTest/src/sample/wave.png");
                 Image wave = new Image(inputstreamWave);
 
                 setFill(new ImagePattern(wave));
@@ -581,7 +598,8 @@ public class Board extends Parent {
                     BattleshipMain.EnemyScore += ship.Score;
                 }
                 try {
-                    FileInputStream inputstreamFire = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/fire.png");
+                    URL urlFire = getClass().getResource("fire.png");
+                    FileInputStream inputstreamFire = new FileInputStream(urlFire.getPath());//("/home/thodoris/BattlesShipTest/src/sample/fire.png");
                     Image fire = new Image(inputstreamFire);
                     setFill(new ImagePattern(fire));
                 }catch(FileNotFoundException e){

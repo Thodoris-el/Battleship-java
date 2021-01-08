@@ -3,6 +3,7 @@ package sample;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -82,7 +83,8 @@ public class BattleshipMain extends Application {
         }
         else {
             try {
-                Scenario = new File("/home/thodoris/BattlesShipTest/src/sample/Scenarios/player_"+ScenarioID+".txt");
+                URL url = getClass().getResource("Medialab/player_"+ScenarioID+".txt");
+                Scenario = new File(url.getPath());//("/home/thodoris/BattlesShipTest/src/sample/Scenarios/player_"+ScenarioID+".txt");
                 Scanner reader = new Scanner(Scenario);
                 while (reader.hasNext()) {
                     String data = reader.next();
@@ -126,18 +128,22 @@ public class BattleshipMain extends Application {
      */
     private Parent createContent(boolean flag) throws FileNotFoundException {
         ScenarioID = Board.ScenarioID;
-
-        String audioFile = "/home/thodoris/BattlesShipTest/src/sample/Makai Symphony - Dragon Castle.mp3";
-        File  songFile = new File(audioFile);
-        Media media = new Media(songFile.toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setOnEndOfMedia(new Runnable() {
-            @Override
-            public void run() {
-                mediaPlayer.seek(Duration.ZERO);
-            }
-        });
-        mediaPlayer.setAutoPlay(true);
+        try {
+            URL url = getClass().getResource("Makai Symphony - Dragon Castle.mp3");
+            String audioFile = "/home/thodoris/BattlesShipTest/src/sample/Makai Symphony - Dragon Castle.mp3";
+            File songFile = new File(url.getPath());
+            Media media = new Media(url.toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setOnEndOfMedia(new Runnable() {
+                @Override
+                public void run() {
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
+                }
+            });
+            mediaPlayer.setAutoPlay(true);
+        }catch(Exception ignore){
+        }
 
 
         ships[0] = 5;
@@ -191,7 +197,8 @@ public class BattleshipMain extends Application {
 
         Button ShootButton = new Button("Shoot");
         try{
-            FileInputStream cannon = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cannon.png");
+            URL urlCannon = getClass().getResource("cannon.png");
+            FileInputStream cannon = new FileInputStream(urlCannon.getPath());//new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cannon.png");
             Image cannonImg= new Image(cannon);
             ImageView cannonView = new ImageView(cannonImg);
             cannonView.setFitHeight(40);
@@ -342,7 +349,8 @@ public class BattleshipMain extends Application {
 
         FileInputStream inputstreamShip;
         Label Cruiser = new Label("Cruiser");
-        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
+        URL urlCruiser = getClass().getResource("cruiser.png");
+        inputstreamShip = new FileInputStream(urlCruiser.getPath());//("/home/thodoris/BattlesShipTest/src/sample/cruiser.png");
         Image imgCruiser = new Image(inputstreamShip);
         ImageView imgCruiserView = new ImageView(imgCruiser);
         imgCruiserView.setFitHeight(25);
@@ -352,7 +360,8 @@ public class BattleshipMain extends Application {
         Cruiser.setTextFill(Color.DARKRED);
 
         Label Carrier = new Label("Carrier");
-        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
+        URL urlCarrier = getClass().getResource("carrier.png");
+        inputstreamShip = new FileInputStream(urlCarrier.getPath());//("/home/thodoris/BattlesShipTest/src/sample/carrier.png");
         Image imgCarrier = new Image(inputstreamShip);
         ImageView imgCarrierView = new ImageView(imgCarrier);
         imgCarrierView.setFitHeight(25);
@@ -362,7 +371,8 @@ public class BattleshipMain extends Application {
         Carrier.setTextFill(Color.DARKRED);
 
         Label Battleship = new Label("Battleship");
-        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
+        URL urlBattleship = getClass().getResource("batteship.png");
+        inputstreamShip = new FileInputStream(urlBattleship.getPath());//("/home/thodoris/BattlesShipTest/src/sample/batteship.png");
         Image imgBattleship = new Image(inputstreamShip);
         ImageView imgBattleshipView = new ImageView(imgBattleship);
         imgBattleshipView.setFitHeight(25);
@@ -372,7 +382,8 @@ public class BattleshipMain extends Application {
         Battleship.setTextFill(Color.DARKRED);
 
         Label Submarine = new Label("Submarine");
-        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
+        URL urlSubmarine = getClass().getResource("submarine.png");
+        inputstreamShip = new FileInputStream(urlSubmarine.getPath());//("/home/thodoris/BattlesShipTest/src/sample/submarine.png");
         Image imgSubmarine = new Image(inputstreamShip);
         ImageView imgSubmarineView = new ImageView(imgSubmarine);
         imgSubmarineView.setFitHeight(25);
@@ -382,7 +393,8 @@ public class BattleshipMain extends Application {
         Submarine.setTextFill(Color.DARKRED);
 
         Label Destroyer = new Label("Destroyer");
-        inputstreamShip = new FileInputStream("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
+        URL urlDestroyer = getClass().getResource("destroyer.png");
+        inputstreamShip = new FileInputStream(urlDestroyer.getPath());//("/home/thodoris/BattlesShipTest/src/sample/destroyer.png");
         Image imgDestroyer = new Image(inputstreamShip);
         ImageView imgDestroyerView = new ImageView(imgDestroyer);
         imgDestroyerView.setFitHeight(25);
@@ -474,7 +486,11 @@ public class BattleshipMain extends Application {
                 y = (int) NextMove.get(0).getY();
                 NextMove.remove(0);
             }
+            if(x<0 || x>9 || y<0 || y>9){
+                continue;
+            }
             Cell cell = playerBoard.getCell(x, y);
+
             if (cell.wasShot)
                 continue;
            try {
@@ -482,8 +498,8 @@ public class BattleshipMain extends Application {
                 if(enemyTurn){
                     if(previus==null){
                         previus = new Point2D(x,y);
-                        NextMove.add(new Point2D(x,y+1));
-                        NextMove.add(new Point2D(x,y-1));
+                        NextMove.add(new Point2D(x, y + 1));
+                        NextMove.add(new Point2D(x, y - 1));
                         NextMove.add(new Point2D(x+1,y));
                         NextMove.add(new Point2D(x-1,y));
                         Collections.shuffle(NextMove);
@@ -554,7 +570,8 @@ public class BattleshipMain extends Application {
         }
         else {
             try {
-                Scenario = new File("/home/thodoris/BattlesShipTest/src/sample/Scenarios/enemy_"+ScenarioID+".txt");
+                URL url = getClass().getResource("Medialab/enemy_"+ScenarioID+".txt");
+                Scenario = new File(url.getPath());//("/home/thodoris/BattlesShipTest/src/sample/Scenarios/enemy_"+ScenarioID+".txt");
                 Scanner reader = new Scanner(Scenario);
                 while (reader.hasNext()) {
                     String data = reader.next();
