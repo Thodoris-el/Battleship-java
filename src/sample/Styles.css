@@ -1,5 +1,5 @@
 #pane{
-    -fx-background-image: url("Battleship.png");
+    -fx-background-image: url("Images/Battleship.png");
     -fx-background-repeat: stretch;
     -fx-background-size: 1200 800;
     -fx-background-position: center center;
