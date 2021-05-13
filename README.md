@@ -2,11 +2,11 @@
 
 ### This is a battleship game created with java fx
 
-##Main Screen of the game
+## Main Screen of the game
 
 ![Main Screen](https://files.fm/thumb_show.php?i=59wnjrz39)
 
-##Features of the game
+## Features of the game
 
 -Put your ships via click or file
 -Enemy plays as human (AI)
@@ -14,7 +14,7 @@
 -Five ships with lengths (2,3,3,4,5)
 -Menu with statistics and inforamtion
 
-###Check out this pictures
+### Check out this pictures
 
 ![photo Game](https://files.fm/thumb_show.php?i=g4dtdypcw)
 
@@ -23,7 +23,7 @@
 ![photo Game](https://files.fm/thumb_show.php?i=frfbrb4hz)
 
 
-##How to play
+##  How to play
 
 Use intellij for easier set up
 
