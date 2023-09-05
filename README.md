@@ -13,6 +13,10 @@
 - Number of shoots = 40
 - Five ships with lengths (2,3,3,4,5)
 - Menu with statistics and inforamtion
+- Shoot by click or button
+- Icons for ships
+- Icons for missed and successful shots
+- Background Music
 
 ### Check out this pictures
 
