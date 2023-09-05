@@ -8,11 +8,11 @@
 
 ## Features of the game
 
--Put your ships via click or file
--Enemy plays as human (AI)
--Number of shoots = 40
--Five ships with lengths (2,3,3,4,5)
--Menu with statistics and inforamtion
+- Put your ships via click or file
+- Enemy plays as human (AI)
+- Number of shoots = 40
+- Five ships with lengths (2,3,3,4,5)
+- Menu with statistics and inforamtion
 
 ### Check out this pictures
 
