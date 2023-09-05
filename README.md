@@ -18,7 +18,7 @@
 - Icons for missed and successful shots
 - Background Music
 
-### Check out this pictures
+### Screenshots of the game
 
 ![photo Game](https://files.fm/thumb_show.php?i=g4dtdypcw)
 
